@@ -70,6 +70,12 @@ func (r *ZnnRpc) Reconnect() error {
 	return nil
 }
 
+/// Merge mining
+
+func (r *ZnnRpc) GetBlockHeader(hash types.Hash) (*definition.BlockHeaderVariable, error) {
+	return r.rpcClient.MergeMiningApi.GetBlockHeader(hash)
+}
+
 /// Subscriptions
 
 func (r *ZnnRpc) SubscribeToMomentums() (*server.ClientSubscription, chan []subscribe.Momentum, error) {

@@ -4,6 +4,13 @@ package block_header;
 option go_package = "./block_header";
 
 message BlockHeaderProto {
-  bytes hash = 1;
-  int32 height = 2;
+  int32 version = 1;
+  bytes prevBlock = 2;
+  bytes merkleRoot = 3;
+  uint32 timestamp = 4;
+  uint32 bits = 5;
+  uint32 nonce = 6;
+  uint32 height = 7;
+  bytes workSum = 8;
+  bytes hash = 9;
 }

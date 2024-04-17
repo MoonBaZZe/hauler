@@ -2,7 +2,6 @@ package node
 
 import (
 	"errors"
-	"fmt"
 	"github.com/MoonBaZZe/hauler/common"
 	"github.com/MoonBaZZe/hauler/db/manager"
 	"github.com/MoonBaZZe/hauler/network"
@@ -87,7 +86,24 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 }
 
 func (node *Node) Start() error {
-	fmt.Println("In start()")
+	node.lock.Lock()
+	defer node.lock.Unlock()
+
+	frMom, frMomErr := node.networksManager.Znn().GetFrontierMomentum()
+	if frMomErr != nil {
+		return frMomErr
+	} else if frMom == nil {
+		return errors.New("frontier momentum is nil")
+	} else {
+		if errState := node.state.SetFrontierMomentum(frMom.Height); errState != nil {
+			return errState
+		}
+	}
+
+	if err := node.networksManager.Start(); err != nil {
+		return err
+	}
+
 	//m, err := node.BtcClient.GetBlockCount()
 	//if err != nil {
 	//	return err
