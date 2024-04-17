@@ -133,5 +133,5 @@ func (r *ZnnRpc) GetFrontierMomentum() (*api.Momentum, error) {
 }
 
 func (r *ZnnRpc) GetSecurityInfo() (*definition.SecurityInfoVariable, error) {
-	return r.rpcClient.BridgeApi.GetSecurityInfo()
+	return r.rpcClient.MergeMiningApi.GetSecurityInfo()
 }
