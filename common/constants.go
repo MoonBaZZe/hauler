@@ -1,5 +1,7 @@
 package common
 
 const (
-	DefaultLogsDir = "logs"
+	DefaultLogsDir        = "logs"
+	DefaultHeaderChainDir = "header-chain"
+	HeadChainName         = "bitcoin"
 )

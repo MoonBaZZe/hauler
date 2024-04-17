@@ -26,9 +26,9 @@ func MakeConfig() (*common.Config, error) {
 
 	// 3: Log config
 	if j, err := json.MarshalIndent(cfg, "", "    "); err == nil {
-		common.GlobalLogger.Info("Using the following orchestrator config: \n", string(j))
+		common.GlobalLogger.Info("Using the following hauler config: \n", string(j))
 	}
-	common.GlobalLogger.Info("using orchestrator config", cfg)
+	common.GlobalLogger.Info("using hauler config", cfg)
 
 	// 4: Write it so a default one is created after the first run
 	if err := common.WriteConfig(cfg); err != nil {

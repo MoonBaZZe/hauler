@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+	"github.com/btcsuite/btcd/rpcclient"
 	"os"
 	"path/filepath"
 )
@@ -9,15 +10,15 @@ import (
 var DefaultNodeConfigFileName = "config.json"
 
 type Config struct {
-	DataPath   string // default ~/.hauler
-	EvmAddress string
-
+	DataPath     string // default ~/.hauler
+	GlobalState  uint8
 	NoMEndpoints []string
-	BtcEndpoints []string
 
 	ProducerKeyFileName       string
 	ProducerKeyFilePassphrase string
 	ProducerIndex             uint32
+
+	BtcConfig *rpcclient.ConnConfig
 }
 
 func (c *Config) MakePathsAbsolute() error {

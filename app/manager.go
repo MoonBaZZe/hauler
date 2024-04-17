@@ -31,7 +31,6 @@ func NewNodeManager(ctx *cli.Context) (*Manager, error) {
 
 	// make node
 	newNode, err := node.NewNode(nodeConfig, logger)
-
 	if err != nil {
 		logger.Info("failed to create the node", zap.String("reason", err.Error()))
 		return nil, err
@@ -46,12 +45,12 @@ func NewNodeManager(ctx *cli.Context) (*Manager, error) {
 
 func (nodeManager *Manager) Start() error {
 	// Start up the node
-	nodeManager.logger.Info("starting orchestrator")
+	nodeManager.logger.Info("starting hauler")
 	if err := nodeManager.node.Start(); err != nil {
 		nodeManager.logger.Fatal("failed to start node", zap.String("reason", err.Error()))
 		os.Exit(1)
 	} else {
-		nodeManager.logger.Info("orchestrator successfully started")
+		nodeManager.logger.Info("hauler successfully started")
 	}
 
 	signalFromOutside := false
@@ -62,7 +61,7 @@ func (nodeManager *Manager) Start() error {
 		defer signal.Stop(c)
 		<-c
 		signalFromOutside = true
-		nodeManager.logger.Info("Shutting down orchestrator from go func")
+		nodeManager.logger.Info("Shutting down hauler from go func")
 
 		go func() {
 			if err := nodeManager.Stop(); err != nil {
@@ -70,12 +69,6 @@ func (nodeManager *Manager) Start() error {
 			}
 		}()
 
-		for i := 10; i > 0; i-- {
-			<-c
-			if i > 1 {
-				nodeManager.logger.Warn("Please DO NOT interrupt the shutdown process, panic may occur.", zap.String("times", string(rune(i-1))))
-			}
-		}
 	}()
 
 	// Waiting for node to close
@@ -90,7 +83,7 @@ func (nodeManager *Manager) Start() error {
 	return nil
 }
 func (nodeManager *Manager) Stop() error {
-	nodeManager.logger.Warn("Stopping orchestrator ...")
+	nodeManager.logger.Warn("Stopping hauler ...")
 
 	if err := nodeManager.SaveConfig(); err != nil {
 		nodeManager.logger.Info("Failed to save config", zap.String("reason", err.Error()))

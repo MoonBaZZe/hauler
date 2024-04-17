@@ -2,8 +2,10 @@ package node
 
 import (
 	"errors"
+	"fmt"
 	"github.com/MoonBaZZe/hauler/common"
-	"github.com/MoonBaZZe/hauler/rpc"
+	"github.com/MoonBaZZe/hauler/db/manager"
+	"github.com/MoonBaZZe/hauler/network"
 	wallet2 "github.com/MoonBaZZe/znn-sdk-go/wallet"
 	"github.com/prometheus/tsdb/fileutil"
 	"github.com/zenon-network/go-zenon/wallet"
@@ -16,12 +18,14 @@ import (
 )
 
 type Node struct {
-	config          *common.Config
+	config *common.Config
+
+	dbManager       *manager.Manager
+	networksManager *network.NetworksManager
+	state           *common.GlobalState
+
 	producerKeyPair *wallet.KeyPair
 	logger          *zap.SugaredLogger
-
-	ZnnClient *rpc.ZnnRpc
-
 	// Channel to wait for termination notifications
 	stopChan chan os.Signal
 	lock     sync.RWMutex
@@ -34,13 +38,9 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 
 	node := &Node{
 		config:   config,
+		state:    common.NewGlobalState(&config.GlobalState), // todo set default?
 		logger:   logger.Sugar(),
 		stopChan: make(chan os.Signal, 1),
-	}
-
-	node.ZnnClient, err = rpc.NewZnnRpcClient(config.NoMEndpoints)
-	if err != nil {
-		return nil, err
 	}
 
 	// prepare node
@@ -49,8 +49,19 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 		return nil, err
 	}
 
-	// init btc rpc
+	if node.dbManager, err = manager.NewDbManager(node.stopChan); err != nil {
+		return nil, err
+	}
 
+	node.networksManager, err = network.NewNetworksManager(node.stopChan)
+	if err != nil {
+		return nil, err
+	}
+	if errInit := node.networksManager.Init(config, node.dbManager, node.state); errInit != nil {
+		return nil, errInit
+	}
+
+	// init btc rpc
 	newKeyStore, err := wallet2.ReadKeyFile(config.ProducerKeyFileName, config.ProducerKeyFilePassphrase, path.Join(config.DataPath, config.ProducerKeyFileName))
 	if err != nil {
 		return nil, err
@@ -64,7 +75,7 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 		return nil, errors.New("entropy cannot be nil")
 	}
 
-	for node.ZnnClient.IsSynced() == false {
+	for node.networksManager.Znn().IsSynced() == false {
 		node.logger.Info("node is syncing, will wait for it to finish")
 		time.Sleep(15 * time.Second)
 	}
@@ -76,15 +87,37 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 }
 
 func (node *Node) Start() error {
+	fmt.Println("In start()")
+	//m, err := node.BtcClient.GetBlockCount()
+	//if err != nil {
+	//	return err
+	//}
+	//fmt.Println(m)
+
+	//m, err := node.BtcClient.GetMemPool()
+	//if err != nil {
+	//	return err
+	//}
+	//for k, v := range m {
+	//	fmt.Println(k, v)
+	//}
 	return nil
 }
 
 func (node *Node) Stop() error {
+	defer close(node.stopChan)
 	return nil
 }
 
-func (node *Node) Wait() error {
-	return nil
+func (node *Node) Wait() {
+	signalReceived := <-node.stopChan
+	node.logger.Info("signal from wait: ", signalReceived)
+}
+
+func (node *Node) WatchBestBlock() {
+	for {
+		//bestBlock, height, err := node.BtcClient.GetBestBlock()
+	}
 }
 
 func (node *Node) GetConfig() *common.Config {

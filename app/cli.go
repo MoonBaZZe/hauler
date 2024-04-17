@@ -36,7 +36,7 @@ func init() {
 	app.Name = filepath.Base(os.Args[0])
 	app.HideVersion = false
 	app.Compiled = time.Now()
-	app.Usage = "orchestrator Node"
+	app.Usage = "Hauler Node"
 	app.Commands = []cli.Command{
 		versionCommand,
 	}
@@ -50,11 +50,11 @@ func init() {
 func beforeAction(ctx *cli.Context) error {
 
 	max := runtime.NumCPU()
-	fmt.Printf("Starting orchestrator.\n")
+	fmt.Printf("Starting Node.\n")
 	fmt.Printf("current time is %v\n", time.Now().Format("2009-01-03 18:15:05"))
 	//fmt.Printf("version: %v\n", metadata.Version)
 	//fmt.Printf("git-commit-hash: %v\n", metadata.GitCommit)
-	fmt.Printf("orchestrator will use at most %v cpu-cores\n", max)
+	fmt.Printf("Hauler will use at most %v cpu-cores\n", max)
 	runtime.GOMAXPROCS(max)
 
 	// pprof server

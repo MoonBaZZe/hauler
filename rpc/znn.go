@@ -132,10 +132,6 @@ func (r *ZnnRpc) GetFrontierMomentum() (*api.Momentum, error) {
 	return r.rpcClient.LedgerApi.GetFrontierMomentum()
 }
 
-func (r *ZnnRpc) IsSynced() bool {
-	syncInfo, err := r.rpcClient.StatsApi.SyncInfo()
-	if err != nil {
-		common2.GlobalLogger.Error(err)
-	}
-	return syncInfo.State == protocol.SyncDone
+func (r *ZnnRpc) GetSecurityInfo() (*definition.SecurityInfoVariable, error) {
+	return r.rpcClient.BridgeApi.GetSecurityInfo()
 }

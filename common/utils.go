@@ -1,6 +1,9 @@
 package common
 
 import (
+	"github.com/syndtr/goleveldb/leveldb"
+	lerrors "github.com/syndtr/goleveldb/leveldb/errors"
+	"github.com/syndtr/goleveldb/leveldb/opt"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -33,4 +36,29 @@ func DefaultDataDir() string {
 	}
 	// As we cannot guess a stable location, return empty and handle later
 	return ""
+}
+
+func CreateOrOpenLevelDb(name string) (*leveldb.DB, error) {
+	opts := &opt.Options{OpenFilesCacheCapacity: 200}
+	evDir := filepath.Join(DefaultDataDir(), DefaultHeaderChainDir)
+	if _, err := os.Stat(evDir); os.IsNotExist(err) {
+		if err = os.MkdirAll(evDir, 0700); err != nil {
+			return nil, err
+		}
+	}
+	dbDir := filepath.Join(evDir, name)
+	ldb, err := leveldb.OpenFile(dbDir, opts)
+	if _, isCorrupted := err.(*lerrors.ErrCorrupted); isCorrupted {
+		ldb, err = leveldb.RecoverFile(dbDir, nil)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return ldb, nil
+}
+
+func DeleteLvlDb(name string) error {
+	dbPath := filepath.Join(DefaultDataDir(), DefaultHeaderChainDir, name)
+	return os.RemoveAll(dbPath)
 }
