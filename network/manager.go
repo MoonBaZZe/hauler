@@ -12,6 +12,7 @@ import (
 
 type NetworksManager struct {
 	znnNetwork *ZnnNetwork
+	btcNetwork *BtcNetwork
 	stopChan   chan os.Signal
 	logger     *zap.SugaredLogger
 }
@@ -31,7 +32,7 @@ func NewNetworksManager(stopChan chan os.Signal) (*NetworksManager, error) {
 }
 
 func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager, state *common.GlobalState) error {
-	newRpcManager, err := rpc.NewRpcManager(config.NoMEndpoints, m.stopChan)
+	newRpcManager, err := rpc.NewRpcManager(config, m.stopChan)
 	if err != nil {
 		return err
 	}
@@ -42,17 +43,21 @@ func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager
 	}
 	m.znnNetwork = newZnnNetwork
 
-	// todo create btc network
-	// todo are handlers needed?
-	//node.BtcClient, err = rpc.NewBtcRpcClient(config.BtcConfig, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
+	newBtcNetwork, err := NewBtcNetwork(newRpcManager, dbManager, m, state, m.stopChan)
+	if err != nil {
+		return err
+	}
+	m.btcNetwork = newBtcNetwork
+
 	return nil
 }
 
 func (m *NetworksManager) Start() error {
-	if err := m.znnNetwork.Start(); err != nil {
+	//if err := m.znnNetwork.Start(); err != nil {
+	//	return err
+	//}
+
+	if err := m.btcNetwork.Start(); err != nil {
 		return err
 	}
 

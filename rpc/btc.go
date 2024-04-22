@@ -4,6 +4,7 @@ import (
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"
+	"github.com/btcsuite/btcd/wire"
 )
 
 type BtcRpc struct {
@@ -24,14 +25,14 @@ func (b *BtcRpc) GetMemPool() (map[string]btcjson.GetRawMempoolVerboseResult, er
 	return b.rpcClient.GetRawMempoolVerbose()
 }
 
-func (b *BtcRpc) GetBestBlock() (*chainhash.Hash, int32, error) {
+func (b *BtcRpc) GetBestBlockHash() (*chainhash.Hash, int32, error) {
 	return b.rpcClient.GetBestBlock()
+}
+
+func (b *BtcRpc) GetBlockHeader(hash *chainhash.Hash) (*wire.BlockHeader, error) {
+	return b.rpcClient.GetBlockHeader(hash)
 }
 
 func (b *BtcRpc) GetBlockCount() (int64, error) {
 	return b.rpcClient.GetBlockCount()
-}
-
-func (b *BtcRpc) H() {
-	//b.rpcClient.
 }

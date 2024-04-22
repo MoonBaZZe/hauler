@@ -29,7 +29,6 @@ type ZnnNetwork struct {
 	state          *common.GlobalState
 	stopChan       chan os.Signal
 	logger         *zap.SugaredLogger
-	administrator  string
 }
 
 // CheckSecurityInfoInitialized this method should have the same checks as in go-zenon
@@ -48,12 +47,12 @@ func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 		return nil, errors.New("BridgeInfo not initialised")
 	}
 
-	securityInfo, err := rpcManager.Znn().GetSecurityInfo()
-	if err != nil {
-		return nil, err
-	} else if bridgeErr := CheckSecurityInfoInitialized(securityInfo); bridgeErr != nil {
-		return nil, bridgeErr
-	}
+	//securityInfo, err := rpcManager.Znn().GetSecurityInfo()
+	//if err != nil {
+	//	return nil, err
+	//} else if bridgeErr := CheckSecurityInfoInitialized(securityInfo); bridgeErr != nil {
+	//	return nil, bridgeErr
+	//}
 
 	newLogger, errLog := common.CreateSugarLogger()
 	if errLog != nil {
@@ -67,7 +66,6 @@ func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 		state:          state,
 		stopChan:       stopChan,
 		logger:         newLogger,
-		administrator:  bridgeInfo.Administrator.String(),
 	}
 	return newZnnNetwork, nil
 }

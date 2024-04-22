@@ -60,7 +60,7 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 		return nil, errInit
 	}
 
-	// init btc rpc
+	// init btc.go rpc
 	newKeyStore, err := wallet2.ReadKeyFile(config.ProducerKeyFileName, config.ProducerKeyFilePassphrase, path.Join(config.DataPath, config.ProducerKeyFileName))
 	if err != nil {
 		return nil, err
