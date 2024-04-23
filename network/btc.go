@@ -5,6 +5,7 @@ import (
 	"github.com/MoonBaZZe/hauler/common"
 	"github.com/MoonBaZZe/hauler/db/manager"
 	"github.com/MoonBaZZe/hauler/rpc"
+	"github.com/btcsuite/btcd/btcutil"
 	"go.uber.org/zap"
 	"os"
 	"time"
@@ -17,9 +18,10 @@ type BtcNetwork struct {
 	state          *common.GlobalState
 	stopChan       chan os.Signal
 	logger         *zap.SugaredLogger
+	tssAddress     btcutil.Address
 }
 
-func NewBtcNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, state *common.GlobalState, stopChan chan os.Signal) (*BtcNetwork, error) {
+func NewBtcNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, state *common.GlobalState, stopChan chan os.Signal, tssAddress btcutil.Address) (*BtcNetwork, error) {
 	newLogger, errLog := common.CreateSugarLogger()
 	if errLog != nil {
 		return nil, errLog
@@ -32,6 +34,7 @@ func NewBtcNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 		state:          state,
 		stopChan:       stopChan,
 		logger:         newLogger,
+		tssAddress:     tssAddress,
 	}
 	return newBtcNetwork, nil
 }
@@ -39,7 +42,7 @@ func NewBtcNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 func (bN *BtcNetwork) Start() error {
 	fmt.Println("btcNetwork start 0")
 	// Set the initial best block
-	bestBlockHash, _, err := bN.rpcManager.Btc().GetBestBlockHash()
+	bestBlockHash, err := bN.rpcManager.Btc().GetBestBlockHash()
 	if err != nil {
 		return err
 	}
@@ -61,7 +64,7 @@ func (bN *BtcNetwork) Start() error {
 func (bN *BtcNetwork) UpdateBestBlock() {
 	for {
 		time.Sleep(5 * time.Second)
-		bestBlockHash, _, err := bN.rpcManager.Btc().GetBestBlockHash()
+		bestBlockHash, err := bN.rpcManager.Btc().GetBestBlockHash()
 		if err != nil {
 			bN.logger.Debugf("rpcManager.Btc().GetBestBlockHash error: %s", err.Error())
 			continue
@@ -96,3 +99,25 @@ func (bN *BtcNetwork) UpdateBestBlock() {
 		}
 	}
 }
+
+// Todo set extra data
+func (bN *BtcNetwork) GetCoinBaseTx(extraNonce uint64) (*btcutil.Tx, error) {
+	bestBlock, err := bN.state.GetBestBlockHeader()
+	if err != nil {
+		return nil, err
+	}
+
+	script, err := common.StandardCoinbaseScript(bestBlock.Height+1, extraNonce)
+	if err != nil {
+		return nil, err
+	}
+
+	coinbaseTx, err := common.CreateCoinbaseTx(script, bestBlock.Height+1, bN.tssAddress)
+	if err != nil {
+		return nil, err
+	}
+	// todo add extra data
+	return coinbaseTx, nil
+}
+
+//func (bN *BtcNetwork) Create(extraNonce uint64) (*btcutil.Tx, error) {}

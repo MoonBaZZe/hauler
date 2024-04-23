@@ -114,8 +114,8 @@ func (r *ZnnRpc) BroadcastTransaction(tx *nom.AccountBlock, keyPair *wallet.KeyP
 
 /// RPC Calls
 
-func (r *ZnnRpc) GetBridgeInfo() (*definition.BridgeInfoVariable, error) {
-	return r.rpcClient.BridgeApi.GetBridgeInfo()
+func (r *ZnnRpc) GetMergeMiningInfo() (*definition.MergeMiningInfoVariable, error) {
+	return r.rpcClient.MergeMiningApi.GetMergeMiningInfo()
 }
 
 func (r *ZnnRpc) GetSyncInfo() (*protocol.SyncInfo, error) {

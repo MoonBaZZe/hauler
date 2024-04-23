@@ -10,7 +10,7 @@ message BlockHeaderProto {
   uint32 timestamp = 4;
   uint32 bits = 5;
   uint32 nonce = 6;
-  uint32 height = 7;
+  int32 height = 7;
   bytes workSum = 8;
   bytes hash = 9;
 }

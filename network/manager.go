@@ -1,10 +1,15 @@
 package network
 
 import (
+	"encoding/base64"
 	"github.com/MoonBaZZe/hauler/common"
 	"github.com/MoonBaZZe/hauler/db/manager"
 	"github.com/MoonBaZZe/hauler/rpc"
+	"github.com/btcsuite/btcd/btcutil"
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/pkg/errors"
+	"github.com/zenon-network/go-zenon/vm/constants"
+	"github.com/zenon-network/go-zenon/vm/embedded/definition"
 	"go.uber.org/zap"
 
 	"os"
@@ -43,7 +48,32 @@ func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager
 	}
 	m.znnNetwork = newZnnNetwork
 
-	newBtcNetwork, err := NewBtcNetwork(newRpcManager, dbManager, m, state, m.stopChan)
+	//mergeMiningInfo, err := newRpcManager.Znn().GetMergeMiningInfo()
+	//if err != nil {
+	//	return err
+	//}
+
+	// todo remove after setting up a testnet
+	mergeMiningInfo := &definition.MergeMiningInfoVariable{
+		DecompressedTssECDSAPubKey: "BMAQx1M3LVXCuozDOqO5b9adj/PItYgwZFG/xTDBiZzTnQAT1qOPAkuPzu6yoewss9XbnTmZmb9JQNGXmkPYtK4=",
+	}
+
+	pubKey, err := base64.StdEncoding.DecodeString(mergeMiningInfo.DecompressedTssECDSAPubKey)
+	if err != nil {
+		return constants.ErrInvalidB64Decode
+	}
+	if len(pubKey) != constants.DecompressedECDSAPubKeyLength {
+		return constants.ErrInvalidDecompressedECDSAPubKeyLength
+	}
+
+	net := &chaincfg.Params{
+		PubKeyHashAddrID: 0x00,
+	}
+	tssAddress, err := btcutil.NewAddressPubKey(pubKey, net)
+	if err != nil {
+		return err
+	}
+	newBtcNetwork, err := NewBtcNetwork(newRpcManager, dbManager, m, state, m.stopChan, tssAddress)
 	if err != nil {
 		return err
 	}

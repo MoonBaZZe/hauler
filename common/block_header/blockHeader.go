@@ -27,7 +27,7 @@ type BlockHeader struct {
 	// Nonce used to generate the block.
 	Nonce uint32 `json:"nonce"`
 
-	Height  uint32     `json:"height"`
+	Height  int32      `json:"height"`
 	WorkSum *big.Int   `json:"workSum"`
 	Hash    types.Hash `json:"hash"`
 }

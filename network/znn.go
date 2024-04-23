@@ -40,13 +40,6 @@ func CheckSecurityInfoInitialized(securityInfo *definition.SecurityInfoVariable)
 }
 
 func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, state *common.GlobalState, stopChan chan os.Signal) (*ZnnNetwork, error) {
-	bridgeInfo, err := rpcManager.Znn().GetBridgeInfo()
-	if err != nil {
-		return nil, err
-	} else if bridgeInfo == nil {
-		return nil, errors.New("BridgeInfo not initialised")
-	}
-
 	//securityInfo, err := rpcManager.Znn().GetSecurityInfo()
 	//if err != nil {
 	//	return nil, err
@@ -312,7 +305,7 @@ func (rC *ZnnNetwork) AddBlockHeader(blockHeader *definition.BlockHeaderVariable
 		Timestamp:  blockHeader.Timestamp,
 		Bits:       blockHeader.Bits,
 		Nonce:      blockHeader.Nonce,
-		Height:     blockHeader.Height,
+		Height:     int32(blockHeader.Height),
 		Hash:       blockHeader.Hash,
 	}
 
