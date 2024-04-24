@@ -1,4 +1,4 @@
-package block_header
+package znn_storage
 
 import (
 	"github.com/MoonBaZZe/hauler/db"

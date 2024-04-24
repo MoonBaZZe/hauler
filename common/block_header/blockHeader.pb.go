@@ -170,7 +170,7 @@ func file_blockHeader_proto_rawDescGZIP() []byte {
 
 var file_blockHeader_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_blockHeader_proto_goTypes = []interface{}{
-	(*BlockHeaderProto)(nil), // 0: block_header.BlockHeaderProto
+	(*BlockHeaderProto)(nil), // 0: znn_storage.BlockHeaderProto
 }
 var file_blockHeader_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

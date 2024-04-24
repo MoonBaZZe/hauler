@@ -1,4 +1,4 @@
-package block_header
+package znn_storage
 
 var (
 	// We hold here the account block height on which the hauler updated the blocks
