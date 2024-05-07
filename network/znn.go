@@ -15,6 +15,7 @@ import (
 	"github.com/zenon-network/go-zenon/rpc/api"
 	"github.com/zenon-network/go-zenon/vm/constants"
 	"github.com/zenon-network/go-zenon/vm/embedded/definition"
+	"github.com/zenon-network/go-zenon/wallet"
 	"go.uber.org/zap"
 	"math/big"
 	"os"
@@ -23,12 +24,13 @@ import (
 )
 
 type ZnnNetwork struct {
-	dbManager      *manager.Manager
-	rpcManager     *rpc.Manager
-	networkManager *NetworksManager
-	state          *common.GlobalState
-	stopChan       chan os.Signal
-	logger         *zap.SugaredLogger
+	dbManager       *manager.Manager
+	rpcManager      *rpc.Manager
+	networkManager  *NetworksManager
+	producerKeyPair *wallet.KeyPair
+	state           *common.GlobalState
+	stopChan        chan os.Signal
+	logger          *zap.SugaredLogger
 }
 
 // CheckSecurityInfoInitialized this method should have the same checks as in go-zenon
@@ -39,7 +41,7 @@ func CheckSecurityInfoInitialized(securityInfo *definition.SecurityInfoVariable)
 	return nil
 }
 
-func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, state *common.GlobalState, stopChan chan os.Signal) (*ZnnNetwork, error) {
+func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, producerKeyPair *wallet.KeyPair, state *common.GlobalState, stopChan chan os.Signal) (*ZnnNetwork, error) {
 	//securityInfo, err := rpcManager.Znn().GetSecurityInfo()
 	//if err != nil {
 	//	return nil, err
@@ -53,12 +55,13 @@ func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 	}
 
 	newZnnNetwork := &ZnnNetwork{
-		rpcManager:     rpcManager,
-		dbManager:      dbManager,
-		networkManager: networkManager,
-		state:          state,
-		stopChan:       stopChan,
-		logger:         newLogger,
+		rpcManager:      rpcManager,
+		dbManager:       dbManager,
+		networkManager:  networkManager,
+		producerKeyPair: producerKeyPair,
+		state:           state,
+		stopChan:        stopChan,
+		logger:          newLogger,
 	}
 	return newZnnNetwork, nil
 }
@@ -218,6 +221,10 @@ func (rC *ZnnNetwork) ListenForMomentumHeight() {
 			}
 		}
 	}
+}
+
+func (rC *ZnnNetwork) GetProducerKeyPair() *wallet.KeyPair {
+	return rC.producerKeyPair
 }
 
 /*

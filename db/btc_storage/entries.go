@@ -18,7 +18,7 @@ func getTransactionKey(id chainhash.Hash) []byte {
 }
 
 func (bh *btcTransactionStore) AddTransaction(msgTx *wire.MsgTx) error {
-	var txBuf *bytes.Buffer
+	txBuf := bytes.NewBuffer(make([]byte, 0, msgTx.SerializeSize()))
 	if err := msgTx.Serialize(txBuf); err != nil {
 		bh.SendSigInt()
 		return err
@@ -34,7 +34,7 @@ func (bh *btcTransactionStore) AddTransaction(msgTx *wire.MsgTx) error {
 func (bh *btcTransactionStore) GetTransaction(hash chainhash.Hash) (*wire.MsgTx, error) {
 	data, err := bh.DB.Get(getTransactionKey(hash))
 	if errors.Is(err, leveldb.ErrNotFound) {
-		return nil, nil
+		return nil, err
 	}
 	if err != nil {
 		bh.SendSigInt()

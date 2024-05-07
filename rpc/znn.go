@@ -2,6 +2,7 @@ package rpc
 
 import (
 	common2 "github.com/MoonBaZZe/hauler/common"
+	"github.com/MoonBaZZe/hauler/common/block_header"
 	sdk_rpc_client "github.com/MoonBaZZe/znn-sdk-go/rpc_client"
 	"github.com/MoonBaZZe/znn-sdk-go/zenon"
 	"github.com/pkg/errors"
@@ -72,8 +73,22 @@ func (r *ZnnRpc) Reconnect() error {
 
 /// Merge mining
 
+func (r *ZnnRpc) GetHeaderChainInfo() (*definition.HeaderChainInfoVariable, error) {
+	return r.rpcClient.MergeMiningApi.GetHeaderChainInfo()
+}
+
 func (r *ZnnRpc) GetBlockHeader(hash types.Hash) (*definition.BlockHeaderVariable, error) {
 	return r.rpcClient.MergeMiningApi.GetBlockHeader(hash)
+}
+
+func (r *ZnnRpc) SetInitialBitcoinBlock(bh *block_header.BlockHeader, keyPair *wallet.KeyPair) error {
+	tx := r.rpcClient.MergeMiningApi.SetInitialBitcoinBlock(bh.Version, bh.PrevBlock, bh.MerkleRoot, bh.Timestamp, bh.Bits, bh.Nonce)
+	return r.BroadcastTransaction(tx, keyPair)
+}
+
+func (r *ZnnRpc) AddBitcoinBlockHeader(bh *block_header.BlockHeader, keyPair *wallet.KeyPair) error {
+	tx := r.rpcClient.MergeMiningApi.AddBitcoinBlockHeader(bh.Version, bh.PrevBlock, bh.MerkleRoot, bh.Timestamp, bh.Bits, bh.Nonce)
+	return r.BroadcastTransaction(tx, keyPair)
 }
 
 /// Subscriptions

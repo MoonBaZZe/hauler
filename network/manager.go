@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/zenon-network/go-zenon/vm/constants"
 	"github.com/zenon-network/go-zenon/vm/embedded/definition"
+	"github.com/zenon-network/go-zenon/wallet"
 	"go.uber.org/zap"
 
 	"os"
@@ -36,13 +37,13 @@ func NewNetworksManager(stopChan chan os.Signal) (*NetworksManager, error) {
 	return newNetworkManager, nil
 }
 
-func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager, state *common.GlobalState) error {
+func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager, producerKeyPair *wallet.KeyPair, state *common.GlobalState) error {
 	newRpcManager, err := rpc.NewRpcManager(config, m.stopChan)
 	if err != nil {
 		return err
 	}
 
-	newZnnNetwork, err := NewZnnNetwork(newRpcManager, dbManager, m, state, m.stopChan)
+	newZnnNetwork, err := NewZnnNetwork(newRpcManager, dbManager, m, producerKeyPair, state, m.stopChan)
 	if err != nil {
 		return err
 	}
@@ -83,9 +84,9 @@ func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager
 }
 
 func (m *NetworksManager) Start() error {
-	//if err := m.znnNetwork.Start(); err != nil {
-	//	return err
-	//}
+	if err := m.znnNetwork.Start(); err != nil {
+		return err
+	}
 
 	if err := m.btcNetwork.Start(); err != nil {
 		return err

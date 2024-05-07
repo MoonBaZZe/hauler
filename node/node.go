@@ -56,7 +56,7 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	if errInit := node.networksManager.Init(config, node.dbManager, node.state); errInit != nil {
+	if errInit := node.networksManager.Init(config, node.dbManager, node.producerKeyPair, node.state); errInit != nil {
 		return nil, errInit
 	}
 

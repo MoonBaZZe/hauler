@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"
@@ -23,6 +24,10 @@ func NewBtcRpcClient(config *rpcclient.ConnConfig, ntfnHandlers *rpcclient.Notif
 
 func (b *BtcRpc) GetRawMemPool() ([]*chainhash.Hash, error) {
 	return b.rpcClient.GetRawMempool()
+}
+
+func (b *BtcRpc) GetRawMemPoolVerbose() (map[string]btcjson.GetRawMempoolVerboseResult, error) {
+	return b.rpcClient.GetRawMempoolVerbose()
 }
 
 func (b *BtcRpc) GetBestBlockHash() (*chainhash.Hash, error) {
