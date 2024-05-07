@@ -52,14 +52,6 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 		return nil, err
 	}
 
-	node.networksManager, err = network.NewNetworksManager(node.stopChan)
-	if err != nil {
-		return nil, err
-	}
-	if errInit := node.networksManager.Init(config, node.dbManager, node.producerKeyPair, node.state); errInit != nil {
-		return nil, errInit
-	}
-
 	// init btc.go rpc
 	newKeyStore, err := wallet2.ReadKeyFile(config.ProducerKeyFileName, config.ProducerKeyFilePassphrase, path.Join(config.DataPath, config.ProducerKeyFileName))
 	if err != nil {
@@ -72,6 +64,14 @@ func NewNode(config *common.Config, logger *zap.Logger) (*Node, error) {
 	}
 	if len(newKeyStore.Entropy) == 0 {
 		return nil, errors.New("entropy cannot be nil")
+	}
+
+	node.networksManager, err = network.NewNetworksManager(node.stopChan)
+	if err != nil {
+		return nil, err
+	}
+	if errInit := node.networksManager.Init(config, node.dbManager, node.producerKeyPair, node.state); errInit != nil {
+		return nil, errInit
 	}
 
 	for node.networksManager.Znn().IsSynced() == false {
