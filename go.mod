@@ -68,6 +68,6 @@ require (
 )
 
 replace (
-	github.com/MoonBaZZe/znn-sdk-go => github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507105706-911a56aeb8c0
-	github.com/zenon-network/go-zenon => github.com/MoonBaZZe/go-zenon v0.0.0-20240507123338-df6e92c79a5f
+	github.com/MoonBaZZe/znn-sdk-go => ../znn-sdk-go-moonbaze
+	github.com/zenon-network/go-zenon => ../go-zenon-moonbaze
 )

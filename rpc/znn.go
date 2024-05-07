@@ -81,11 +81,6 @@ func (r *ZnnRpc) GetBlockHeader(hash types.Hash) (*definition.BlockHeaderVariabl
 	return r.rpcClient.MergeMiningApi.GetBlockHeader(hash)
 }
 
-func (r *ZnnRpc) SetInitialBitcoinBlock(bh *block_header.BlockHeader, keyPair *wallet.KeyPair) error {
-	tx := r.rpcClient.MergeMiningApi.SetInitialBitcoinBlock(bh.Version, bh.PrevBlock, bh.MerkleRoot, bh.Timestamp, bh.Bits, bh.Nonce)
-	return r.BroadcastTransaction(tx, keyPair)
-}
-
 func (r *ZnnRpc) AddBitcoinBlockHeader(bh *block_header.BlockHeader, keyPair *wallet.KeyPair) error {
 	tx := r.rpcClient.MergeMiningApi.AddBitcoinBlockHeader(bh.Version, bh.PrevBlock, bh.MerkleRoot, bh.Timestamp, bh.Bits, bh.Nonce)
 	return r.BroadcastTransaction(tx, keyPair)
