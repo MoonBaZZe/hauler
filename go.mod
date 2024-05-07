@@ -7,7 +7,6 @@ require (
 	github.com/btcsuite/btcd v0.24.2-beta.rc1
 	github.com/btcsuite/btcd/btcutil v1.1.5
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0
-	github.com/consensys/gnark-crypto v0.12.2-0.20231013160410-1f65e75b6dfb
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/tsdb v0.10.0
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
@@ -27,6 +26,7 @@ require (
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792 // indirect
 	github.com/consensys/bavard v0.1.13 // indirect
 	github.com/consensys/gnark v0.9.1 // indirect
+	github.com/consensys/gnark-crypto v0.12.2-0.20231013160410-1f65e75b6dfb // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/crypto/blake256 v1.0.0 // indirect
@@ -68,6 +68,6 @@ require (
 )
 
 replace (
-	github.com/MoonBaZZe/znn-sdk-go => github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507081237-6bb3c876c62f
-	github.com/zenon-network/go-zenon => github.com/MoonBaZZe/go-zenon v0.0.0-20240411162313-a418ebde288a
+	github.com/MoonBaZZe/znn-sdk-go => github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507105706-911a56aeb8c0
+	github.com/zenon-network/go-zenon => github.com/MoonBaZZe/go-zenon v0.0.0-20240507123338-df6e92c79a5f
 )

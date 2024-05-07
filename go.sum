@@ -1,9 +1,9 @@
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/MoonBaZZe/go-zenon v0.0.0-20240411162313-a418ebde288a h1:7v8ZR5KajX6REtJPNVWZ+Lv6WXv0B006sBEA022Fj6c=
-github.com/MoonBaZZe/go-zenon v0.0.0-20240411162313-a418ebde288a/go.mod h1:xgiaRghGCAt9yFoEz8GHzTun42oKUCyzM2/HYGx8WR8=
-github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507081237-6bb3c876c62f h1:bgpAKBozMngCf3zB8uwJ7UaU03a89LkETH25CdmzFyk=
-github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507081237-6bb3c876c62f/go.mod h1:bi/8stjGMkfA7YHifcvgr+OkZ1LvHMwpxWIscO9mqzA=
+github.com/MoonBaZZe/go-zenon v0.0.0-20240507123338-df6e92c79a5f h1:kfVmDIIu07Xcp/nyNFJv/yxKXgBF5798R2Aqo+IvQDs=
+github.com/MoonBaZZe/go-zenon v0.0.0-20240507123338-df6e92c79a5f/go.mod h1:xgiaRghGCAt9yFoEz8GHzTun42oKUCyzM2/HYGx8WR8=
+github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507105706-911a56aeb8c0 h1:izkZPQjXntwDVsl3YtBeaznl9ZwZeGunT/VAuY/1YdY=
+github.com/MoonBaZZe/znn-sdk-go v0.1.1-0.20240507105706-911a56aeb8c0/go.mod h1:bi/8stjGMkfA7YHifcvgr+OkZ1LvHMwpxWIscO9mqzA=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/aead/siphash v1.0.1/go.mod h1:Nywa3cDsYNNK3gaciGTWPwHt0wlpNV15vwmswBAUSII=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=

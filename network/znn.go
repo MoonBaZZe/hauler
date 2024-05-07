@@ -42,12 +42,12 @@ func CheckSecurityInfoInitialized(securityInfo *definition.SecurityInfoVariable)
 }
 
 func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkManager *NetworksManager, producerKeyPair *wallet.KeyPair, state *common.GlobalState, stopChan chan os.Signal) (*ZnnNetwork, error) {
-	//securityInfo, err := rpcManager.Znn().GetSecurityInfo()
-	//if err != nil {
-	//	return nil, err
-	//} else if bridgeErr := CheckSecurityInfoInitialized(securityInfo); bridgeErr != nil {
-	//	return nil, bridgeErr
-	//}
+	securityInfo, err := rpcManager.Znn().GetSecurityInfo()
+	if err != nil {
+		return nil, err
+	} else if bridgeErr := CheckSecurityInfoInitialized(securityInfo); bridgeErr != nil {
+		return nil, bridgeErr
+	}
 
 	newLogger, errLog := common.CreateSugarLogger()
 	if errLog != nil {
