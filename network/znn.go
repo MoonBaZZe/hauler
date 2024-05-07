@@ -45,8 +45,8 @@ func NewZnnNetwork(rpcManager *rpc.Manager, dbManager *manager.Manager, networkM
 	securityInfo, err := rpcManager.Znn().GetSecurityInfo()
 	if err != nil {
 		return nil, err
-	} else if bridgeErr := CheckSecurityInfoInitialized(securityInfo); bridgeErr != nil {
-		return nil, bridgeErr
+	} else if securityErr := CheckSecurityInfoInitialized(securityInfo); securityErr != nil {
+		return nil, securityErr
 	}
 
 	newLogger, errLog := common.CreateSugarLogger()
@@ -142,7 +142,7 @@ func (rC *ZnnNetwork) Sync() error {
 				}
 			}
 			accountBlockHeight += uint64(len(accountBlockList.List))
-			accountBlockList, err = rC.ZnnRpc().GetAccountBlocksByHeight(types.BridgeContract, accountBlockHeight+1, 30)
+			accountBlockList, err = rC.ZnnRpc().GetAccountBlocksByHeight(types.MergeMiningContract, accountBlockHeight+1, 30)
 			if err != nil {
 				return err
 			}
@@ -159,7 +159,7 @@ func (rC *ZnnNetwork) InterpretSendBlockData(sendBlock *api.AccountBlock, live b
 	case base64.StdEncoding.EncodeToString(definition.ABIMergeMining.Methods[definition.AddBitcoinBlockHeaderMethodName].Id()):
 		rC.logger.Debug("found AddBitcoinBlockHeaderMethodName")
 		param := new(definition.BlockHeaderVariable)
-		if err := definition.ABIBridge.UnpackMethod(param, definition.AddBitcoinBlockHeaderMethodName, sendBlock.Data); err != nil {
+		if err := definition.ABIMergeMining.UnpackMethod(param, definition.AddBitcoinBlockHeaderMethodName, sendBlock.Data); err != nil {
 			return constants.ErrUnpackError
 		}
 		hash := param.BlockHash()
