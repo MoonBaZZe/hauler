@@ -9,7 +9,6 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/pkg/errors"
 	"github.com/zenon-network/go-zenon/vm/constants"
-	"github.com/zenon-network/go-zenon/vm/embedded/definition"
 	"github.com/zenon-network/go-zenon/wallet"
 	"go.uber.org/zap"
 
@@ -49,14 +48,9 @@ func (m *NetworksManager) Init(config *common.Config, dbManager *manager.Manager
 	}
 	m.znnNetwork = newZnnNetwork
 
-	//mergeMiningInfo, err := newRpcManager.Znn().GetMergeMiningInfo()
-	//if err != nil {
-	//	return err
-	//}
-
-	// todo remove after setting up a testnet
-	mergeMiningInfo := &definition.MergeMiningInfoVariable{
-		DecompressedTssECDSAPubKey: "BMAQx1M3LVXCuozDOqO5b9adj/PItYgwZFG/xTDBiZzTnQAT1qOPAkuPzu6yoewss9XbnTmZmb9JQNGXmkPYtK4=",
+	mergeMiningInfo, err := newRpcManager.Znn().GetMergeMiningInfo()
+	if err != nil {
+		return err
 	}
 
 	pubKey, err := base64.StdEncoding.DecodeString(mergeMiningInfo.DecompressedTssECDSAPubKey)

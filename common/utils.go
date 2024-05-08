@@ -4,11 +4,26 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 	lerrors "github.com/syndtr/goleveldb/leveldb/errors"
 	"github.com/syndtr/goleveldb/leveldb/opt"
+	"math"
 	"os"
 	"os/user"
 	"path/filepath"
 	"runtime"
 )
+
+// NextPowerOfTwo returns the next highest power of two from a given number if
+// it is not already a power of two.  This is a helper function used during the
+// calculation of a merkle tree.
+func NextPowerOfTwo(n int) int {
+	// Return the number if it's already a power of 2.
+	if n&(n-1) == 0 {
+		return n
+	}
+
+	// Figure out and return the next power of two.
+	exponent := uint(math.Log2(float64(n))) + 1
+	return 1 << exponent // 2^exponent
+}
 
 func homeDir() string {
 	if home := os.Getenv("HOME"); home != "" {

@@ -104,20 +104,14 @@ func (node *Node) Start() error {
 		return err
 	}
 
-	//m, err := node.BtcClient.GetBlockCount()
-	//if err != nil {
-	//	return err
-	//}
-	//fmt.Println(m)
-
-	//m, err := node.BtcClient.GetMemPool()
-	//if err != nil {
-	//	return err
-	//}
-	//for k, v := range m {
-	//	fmt.Println(k, v)
-	//}
 	return nil
+}
+
+func (node *Node) HandleJobs() {
+	for {
+
+	}
+
 }
 
 func (node *Node) Stop() error {
@@ -128,12 +122,6 @@ func (node *Node) Stop() error {
 func (node *Node) Wait() {
 	signalReceived := <-node.stopChan
 	node.logger.Info("signal from wait: ", signalReceived)
-}
-
-func (node *Node) WatchBestBlock() {
-	for {
-		//bestBlock, height, err := node.BtcClient.GetBestBlock()
-	}
 }
 
 func (node *Node) GetConfig() *common.Config {

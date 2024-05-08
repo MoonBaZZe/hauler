@@ -34,6 +34,14 @@ func (b *BtcRpc) GetBestBlockHash() (*chainhash.Hash, error) {
 	return b.rpcClient.GetBestBlockHash()
 }
 
+func (b *BtcRpc) GetBlockHash(blockHeight int64) (*chainhash.Hash, error) {
+	return b.rpcClient.GetBlockHash(blockHeight)
+}
+
+func (b *BtcRpc) GetBlockVerbose(hash *chainhash.Hash) (*btcjson.GetBlockVerboseResult, error) {
+	return b.rpcClient.GetBlockVerbose(hash)
+}
+
 func (b *BtcRpc) GetBlockHeader(hash *chainhash.Hash) (*wire.BlockHeader, error) {
 	return b.rpcClient.GetBlockHeader(hash)
 }
